@@ -5,9 +5,7 @@
  */
 package debugviewer;
 
-import debugviewer.DebugMessage.DebugType;
 import java.awt.Color;
-import javax.swing.JTextPane;
 import javax.swing.text.AttributeSet;
 import javax.swing.text.SimpleAttributeSet;
 import javax.swing.text.StyleConstants;
@@ -28,9 +26,6 @@ public class DebugUtil {
     LtBlue, Blue, Violet, DkVio;
   }
     
-  private static DebugMessage debug;
-//  private static final DebugMessage debug = new DebugMessage();
-  
   /**
    * generates the specified text color for the debug display.
    * 
@@ -143,55 +138,5 @@ public class DebugUtil {
     return aset;
   }
     
-  public static String getClassType(Object value) {
-    if (value == null) {
-      return "java.lang.Object";
-    }
-    String clstype = value.getClass().toString();
-    if (clstype.startsWith("class ")) {
-      clstype = clstype.substring(6);
-    }
-    return clstype;
-  }
-
-  public static DebugType getDebugType(String message) {
-    // extract the message type from the line
-    if (message.length() >= 7) {
-      String type = message.substring(0, 7);
-      switch (type) {
-        case "ERROR :": return DebugType.Error;
-        case "WARN  :": return DebugType.Warn;
-        case "INFO  :": return DebugType.Info;
-        case "ENTRY :": return DebugType.Entry;
-        case "EXIT  :": return DebugType.Exit;
-        case "STACK :": return DebugType.Stack;
-        case "STACKS:": return DebugType.StackS;
-        case "STACKI:": return DebugType.StackI;
-        case "LOCAL :": return DebugType.Local;
-        case "LOCALS:": return DebugType.LocalS;
-        case "SOLVE :": return DebugType.Solve;
-        default:
-          break;
-      }
-    }
-    return DebugType.Error;
-//    DebugMessage.print(DebugMessage.DebugType.Entry.toString(), message);
-  }
-  
-  public static void clear() {
-    DebugMessage.clear();
-  }
-  
-  public static void printLine(String message) {
-    if (message.length() >= 14) {
-      String msgTime = message.substring(0, 8);
-      message = message.substring(8);
-      DebugType type = getDebugType(message);
-      
-      DebugMessage.printRaw(DebugType.Tstamp.toString(), msgTime);
-      DebugMessage.printRaw(type.toString(), message);
-      DebugMessage.printTerm();
-    }
-  }
 }
 

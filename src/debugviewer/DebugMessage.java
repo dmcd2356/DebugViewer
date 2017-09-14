@@ -24,7 +24,12 @@ public class DebugMessage {
    * these are the types of messages that can be displayed
    */
   public enum DebugType {
-    Normal, Hexdata, Addr, Ascii, Tstamp,           // these are for local use only
+    // these are for local use only
+    Normal,
+    Hexdata,
+    Addr,
+    Ascii,
+    Tstamp,
     // these are for external use
     Error,    // error messages
     Warn,     // warnings
@@ -200,6 +205,35 @@ public class DebugMessage {
     appendToPane(msg, color, "Courier", 11, ftype);
   }
 
+  /**
+   * checks if the specified type is valid
+   * 
+   * @param type - the type as specified in the message
+   * @return the specified valid type (null if not valid)
+   */
+  public static String getValidType(String type) {
+      if (type.length() >= 7 && type.charAt(6) == ':') {
+      type = type.substring(0, 6).trim();
+      	switch (type) {
+      	case "ERROR":
+      	case "WARN":
+      	case "INFO":
+      	case "ENTRY":
+      	case "EXIT":
+      	case "STACK":
+      	case "STACKS":
+      	case "STACKI":
+      	case "LOCAL":
+      	case "LOCALS":
+      	case "SOLVE":
+          return type;
+        default:
+          break;
+      }
+    }
+    return null;
+  }
+  
   /**
    * closes the panel (if one was open)
    */

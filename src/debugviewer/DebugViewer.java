@@ -43,7 +43,7 @@ public class DebugViewer {
    */
   public static void main(String[] args) {
     // create the frame
-    Dimension framesize = new Dimension(500, 300);
+    Dimension framesize = new Dimension(1000, 600);
     mainFrame = new JFrame("DebugViewer");
     mainFrame.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
     mainFrame.setSize(framesize);
@@ -77,7 +77,36 @@ public class DebugViewer {
     mainFrame.setLocationRelativeTo(null);
     mainFrame.setVisible(true);
   }
-  
+
+  /**
+   * formats and prints a line of text to the text panel
+   * 
+   * @param message - the message to print (contains timestamp and message type)
+   */
+  public static void printLine(String message) {
+    // check if timestamp is present
+    String msgTime = "";
+    if (message.length() >= 8 && message.charAt(0) == '[' &&
+                                 message.charAt(3) == ':'&&
+                                 message.charAt(6) == ']') {
+        msgTime = message.substring(0, 8);
+        message = message.substring(8);
+    }
+    // check if message type is present and valid
+    String msgType = DebugMessage.getValidType(message);
+    if (msgType != null) {
+      // print colorized version
+      DebugMessage.printRaw("Tstamp", msgTime);
+      DebugMessage.printRaw(msgType, message);
+      DebugMessage.printTerm();
+    }
+    else {
+      // print text only
+      DebugMessage.printRaw("Normal", msgTime + message);
+      DebugMessage.printTerm();
+    }
+  }
+
   /**
    * This creates a JButton and places it in the container.
    * 
@@ -153,7 +182,7 @@ public class DebugViewer {
     int retVal = fileSelector.showOpenDialog(mainFrame);
     if (retVal == JFileChooser.APPROVE_OPTION) {
       // init the text contents
-      DebugUtil.clear();
+      DebugMessage.clear();
       // read entries from file (ignore comments and blank lines)
       File file = fileSelector.getSelectedFile();
       BufferedReader in;
@@ -165,7 +194,7 @@ public class DebugViewer {
       try {
         String line;
         while ((line = in.readLine()) != null) {
-          DebugUtil.printLine(line);
+          printLine(line);
         }
       } catch (IOException ex) {
         System.err.println(ex.getMessage());
